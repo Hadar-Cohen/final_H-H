@@ -27,6 +27,7 @@
     <script src="../Scripts/signUp.js"></script>
     <script src="../Scripts/insertHome.js"></script>
     <script src="../Scripts/navbarFunc.js"></script>
+
 </head>
 
 <body>
@@ -45,13 +46,15 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a onclick="signUpClick()" id="signUp" class="toblack"><span class="glyphicon glyphicon-user singupc" ></span> Sign Up</a></li>
-                <li><a id="login" href="login.html" class="toblack"><span  class="glyphicon glyphicon-log-in "></span> Login</a></li>
+                <li><a onclick="signUpClick()" id="signUp" class="toblack"><span class="glyphicon glyphicon-user singupc"></span> Sign Up</a></li>
+                <li><a id="login" href="login.html" class="toblack"><span class="glyphicon glyphicon-log-in "></span> Login</a></li>
                 <li><a onclick="exitFunc()" id="exit" class="toblack"><span class="glyphicon glyphicon-log-in "></span> Exit</a></li>
             </ul>
         </div>
     </nav>
-    
+    <button onclick="aboutPage()">TV SHOW about</button>
+
+
     <div id="modalBox" class="modal">
         <span onclick="document.getElementById('modalBox').style.display='none'" class="close" title="Close Modal">&times;</span>
         <form id="pForm" class="modal-content">

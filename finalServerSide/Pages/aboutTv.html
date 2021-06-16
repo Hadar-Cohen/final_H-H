@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous">
+    </script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <link href="insertStyle.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title>Actors</title>
+
+    <style>
+        #poster {
+            float: left;
+        }
+
+            #poster > img {
+                margin-top: 20px;
+                height: 400px;
+                display: block;
+                margin: 0 auto;
+                border-radius: 10px;
+            }
+        /*actorsCards:*/
+        .row {
+            align-items: stretch;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            /*overflow-x: auto;
+            overflow-y: hidden;*/
+        }
+
+        .card {
+            max-width: 170px;
+            padding: .75rem;
+            margin-bottom: 2rem;
+            border: 0;
+            flex-basis: 33.333%;
+            flex-grow: 0;
+            flex-shrink: 0;
+            /*box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);*/
+            transition: 0.3s;
+        }
+
+            .card:hover {
+                box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+            }
+
+            .card > img {
+                margin-bottom: .75rem;
+                max-height: 170px;
+                width: 100%;
+                border-radius: 50%;
+            }
+
+        .card-text {
+            font-size: 15px;
+        }
+
+        #backgroundPorter {
+            width: 100%;
+            background-image: linear-gradient(to right, rgba(7.84%, 8.24%, 11.76%, 1.00) 150px, rgba(7.84%, 8.24%, 11.76%, 0.84) 100%);
+        }
+
+        #backgroundPorter > img {
+            width:100%;
+            mask-image: linear-gradient(to right, rgba(7.84%, 8.24%, 11.76%, 1.00) 150px, rgba(7.84%, 8.24%, 11.76%, 0.84) 100%);
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%);
+        }
+    </style>
+    <script>
+        //https://api.themoviedb.org/3/tv/{tv_id}/season/{season_number}?api_key=<<api_key>>&language=en-US
+
+        $(document).ready(function () {
+            
+            key = "90f77ef6862d870eb9f5fff3bc587100";
+            k = 0;
+            url = "https://api.themoviedb.org/";
+            imagePath = "https://image.tmdb.org/t/p/w500/";
+            // 64467
+            // 1416
+
+            //https://api.themoviedb.org/3/tv/1416/season/0/episode/64467?api_key=1c107f2bd2f3fc2aee24aa4f2f8d8647&language=en-US
+            //AIzaSyBAFQpdpUo7xpd6xQKspMv7Ci-Ex5xmbDg
+
+            if (localStorage.series != null) {
+                series = JSON.parse(localStorage["series"]);
+                console.log(series.extras.Backdrop_path);
+                
+            }
+
+            showTVData();
+            getActors();
+        });
+
+        function getActors() {
+            let name = series.seriesObj.Name;
+            let method = "3/search/tv?";
+            let api_key = "api_key=" + key;
+            let moreParams = "&language=en-US&page=1&include_adult=false&";
+            let query = "query=" + encodeURIComponent(name);
+            let apiCall = url + method + api_key + moreParams + query;
+            ajaxCall("GET", apiCall, "", getCredistSuccess, getCredistError);
+        }
+
+        function showTVData() {
+            let backdropImg = "<img src='" + series.extras.Backdrop_path + "'>";
+            $("#backgroundPorter").html(backdropImg);
+
+            let posterURL = series.seriesObj.PosterURL;
+            let poster = "<img src='" + posterURL; + "'/>";
+            $("#poster").html(poster);
+
+            //let stars = 5;
+            //let popularity = tv.results[0].popularity;
+            //switch (true) {
+            //    case (popularity < 40):
+            //        stars = 1
+            //        break;
+            //    case (popularity < 60):
+            //        stars = 2
+            //        break;
+            //    case (popularity < 200):
+            //        stars = 3
+            //        break;
+            //    case (popularity < 400):
+            //        stars = 4
+            //        break;
+            //}
+            /*str += "<img id='starsPopularity' src= '../images/" + stars + "stars.png'/>";*/
+
+        }
+
+
+        function getCredistSuccess(cast) {
+            console.log(cast);
+            actorsList = "<div class='container'><h3>Actors:</h3>";
+            actorsList += "<div class='row'>";
+            $("#actors").html(actorsList);
+            let tvId = series.seriesObj.Id;
+
+            let method = "3/tv/";
+            let api_key = "api_key=" + key;
+
+            let apiCall = url + method + tvId + "/credits?" + api_key;
+            ajaxCall("GET", apiCall, "", getCastSuccessCB, getCastErrorCB);
+        }
+
+        function getCredistError(err) {
+            alert("ERROR");
+        }
+
+        function getCastSuccessCB(cast) {
+            //actorsList += "<div id='cast_scroller' class='scroller_wrap should_fade is_fading'>";
+            //actorsList += "<ul class='people scroller'>";
+            //actorsList += "<li class='card'><img src='" + imagePath + credit.cast[k].profile_path + "' alt='Avatar' style='width: 250px; height: 300px;'>";
+            //actorsList += "<h5 class= 'chatacter'>" + credit.cast[k].name + "</h5>";
+            //actorsList += "</div>";
+
+            actorsList += "<div class='card'>";
+            actorsList += "<img src='" + imagePath + credit.cast[k].profile_path + "'style='width:100%'>";
+            actorsList += "<h3 class='card-text' style='text-align:center'><b>" + credit.cast[k].name + "</b></h3></div>";
+            if (k % 5 == 4)
+                actorsList += "</div>";
+
+            k++;
+            if (k % 5 == 0) {
+                actorsList += "<div class='row'>";
+            }
+            if (k > 10)
+                getCastErrorCB();
+            $("#actors").html(actorsList);
+
+            let method = "3/tv/";
+            let api_key = "api_key=" + key;
+            let apiCall = url + method + tvId + "/credits?" + api_key;
+            ajaxCall("GET", apiCall, "", getCastSuccessCB, getCastErrorCB);
+        }
+        function getCastErrorCB(err) {
+            if (err.status == 404) {
+                actorsList += "</div>";
+                $("#actors").html(actorsList);
+                console.log(err);
+            }
+        }
+
+    </script>
+
+   
+</head>
+<body>
+    <div class="header">
+        <div class="container-fluid"  id="backgroundPorter">
+            <div class="left" id="poster"></div>
+            <div class="right">
+                <h3>Name of TV SHOW + air_date_year </h3>
+                
+            </div>
+        </div>
+        
+    </div>
+    <div class="actors">
+        <h3>Actors:</h3>
+    </div>
+    
+</body>
+</html>

@@ -180,14 +180,14 @@ span {
     background-color: #c0c9ed;
     height: 250px;
     width: 170px;
-    /*#e6ebff*/
-    /*background: radial-gradient(white, #c0c9ed);*/
+    #e6ebff
+    background: radial-gradient(white, #c0c9ed);
 }
 
 .card2 {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    /*font-size: 0.85vw;*/
+    font-size: 0.85vw;
     color: #1e212d;
     border-radius: 5px;
     display: inline-block;
@@ -210,7 +210,7 @@ h4{
 card > img {
     border-radius: 5px 5px 0 0;
     height: 200px;
-    /*//*/
+    //
     width: 90% ;
     display: block;
     margin: 0 auto;

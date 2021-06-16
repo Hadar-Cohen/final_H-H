@@ -1,6 +1,7 @@
 ﻿/// <reference path="navbarfunc.js" />
 // https://api.themoviedb.org/3/search/tv?api_key=1c107f2bd2f3fc2aee24aa4f2f8d8647&language=en-US&page=1&include_adult=false&query=Grey%27s%20Anatomy
 
+
 $(document).ready(function () {
     $("#getTV").click(getTV);
 
@@ -17,6 +18,10 @@ $(document).ready(function () {
 });
 
 //https://api.themoviedb.org/3/tv/{tv_id}/season/{season_number}?api_key=<<api_key>>&language=en-US
+function aboutPage() {
+
+    setTimeout(function () { location.href = 'aboutTv.html'; }, 2000);
+}
 
 function getTV() {
     i = 1;
@@ -30,55 +35,9 @@ function getTV() {
     let query = "query=" + encodeURIComponent(name);
     let apiCall = url + method + api_key + moreParams + query;
     ajaxCall("GET", apiCall, "", getTVSuccessCB, getTVErrorCB);
-    ajaxCall("GET", apiCall, "", getCredistSuccess, getCredistError);
+    //ajaxCall("GET", apiCall, "", getCredistSuccess, getCredistError);
 }
 
-////////////////////////////////////////////////////////////
-function getCredistSuccess(tv){
-    console.log(tv);
-
-    $("#actors").html("");
-    //castList = "<span>";
-    actorsList = "";
-    tvId = tv.results[0].id;
-
-   
-    
-    let method = "3/tv/";
-    let api_key = "api_key=" + key;
-
-    let apiCall = url + method + tvId + "/credits?" + api_key;
-    ajaxCall("GET", apiCall, "", getCastSuccessCB, getCastErrorCB);
-}
-
-function getCredistError(err) {
-    alert("ERROR");
-}
-
-function getCastSuccessCB(credit) {
-    console.log(credit);
-    //if (k == 0)
-    //    slide();
-    actorsList += "<div class='actorCard'><img class= 'actorImg' style='width: 100%' src='" + imagePath + credit.cast[k].profile_path + "'/>";
-    actorsList += "<div class='actorContainer'><h4 style='text-align:center'><b>" + credit.cast[k].name + "</b></h4></div></div>";
-    //var actorsList = "<div class='carousel-item active'>";
-    //actorsList += "<div class='col-md-3' style='float:left'>  <div class='card mb-2'> ";
-    //actorsList += "<img class='card-img-top' src='" + imagePath + credit.cast[k].profile_path + "' alt='Card image cap'>";
-    //actorsList += "<div class='card-body'> <h4 class='card-title'>" + credit.cast[k].name + "</h4>";
-    //actorsList += "<p class='card-text'>Some text.</p></div></div></div>";
-    if (k == 3) actorsList += "</div>";
-    $("#actors").html(actorsList);
-    k++;
-
-    let method = "3/tv/";
-    let api_key = "api_key=" + key;
-    let apiCall = url + method + tvId + "/credits?" + api_key;
-    ajaxCall("GET", apiCall, "", getCastSuccessCB, getCastErrorCB);
-}
-function getCastErrorCB(err) {
-    strb += "</div> </div>";
-    alert("ERROR");
-}
 
 ////////////////////////////////////////////////////////////
 function slide() {
@@ -91,15 +50,7 @@ function slide() {
 
 }
 
-    
-//var str = "<div class='carousel-item active'>";
-//str += "<div class='col-md-3' style='float:left'>  <div class='card mb-2'> ";
-//str += "<img class='card-img-top' src='" + imagePath + credit.cast[k].profile_path + "' alt='Card image cap'>";
-//str += "<div class='card-body'> <h4 class='card-title'>" + credit.cast[k].name +"</h4>";
-//str += "<p class='card-text'>Some text.</p></div></div></div>";
-//if (k == 3) str += "</div>";
-//    strb+="</div> </div>"
-////////////////////////////////////////////////////////////
+
 //Show the TVSohw 
 function getTVSuccessCB(tv) {
     buildTvSeriese(tv);
@@ -138,6 +89,18 @@ function getTVSuccessCB(tv) {
 
 //create obj for sql table - in button "add" we send it to the sql table
 seriesObj = null;
+//function buildTvSeriese(tv) {
+//    seriesObj = {
+//        Id: tv.results[0].id,
+//        First_air_date: tv.results[0].first_air_date,
+//        Name: tv.results[0].name,
+//        Origin_country: tv.results[0].origin_country[0],
+//        Original_language: tv.results[0].original_language,
+//        Overview: tv.results[0].overview,
+//        Popularity: tv.results[0].popularity,
+//        Poster_path: imagePath + tv.results[0].poster_path
+//    }
+//}
 function buildTvSeriese(tv) {
     seriesObj = {
         Id: tv.results[0].id,
@@ -149,8 +112,19 @@ function buildTvSeriese(tv) {
         Popularity: tv.results[0].popularity,
         Poster_path: imagePath + tv.results[0].poster_path
     }
-}
+    extras = {
 
+        Backdrop_path: imagePath + tv.results[0].backdrop_path,
+        Genre_ids: tv.results[0].genre_ids
+
+    }
+    totalSeries = {
+        seriesObj,
+        extras
+    }
+    console.log(totalSeries);
+    localStorage.setItem("series", JSON.stringify(totalSeries));
+}
 function getTVErrorCB(err) {
     console.log(err);
 }

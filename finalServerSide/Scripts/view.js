@@ -4,6 +4,9 @@
     }
     str += "</select>";
     $("#phView").html(str);
+
+
+    alert(idtvHadar)
 }
 function getSeriesErrorCB(err) {
     alert("Error -cant get the Series names")
